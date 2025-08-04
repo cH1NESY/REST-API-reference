@@ -9,6 +9,6 @@ class GetRootActivitiesAction
 {
     public function execute(): Collection
     {
-        return Activity::with('children')->whereNull('parent_id')->get();
+        return Activity::orderBy('id')->get(['id', 'name', 'parent_id']);
     }
-} 
+}
