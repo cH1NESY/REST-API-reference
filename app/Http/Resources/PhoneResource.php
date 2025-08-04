@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class PhoneResource extends JsonResource
+{
+    public function toArray($request)
+    {
+        return [
+            'id' => $this->id,
+            'phone_number' => $this->phone_number,
+            'type' => $this->type,
+            // Добавляй другие поля, если нужно
+        ];
+    }
+}

@@ -17,10 +17,11 @@ return new class extends Migration
             $table->unsignedBigInteger('parent_id')->nullable();
             $table->integer('level')->default(1);
             $table->timestamps();
-            
+
             $table->foreign('parent_id')->references('id')->on('activities')->onDelete('cascade');
         });
     }
+
 
     /**
      * Reverse the migrations.

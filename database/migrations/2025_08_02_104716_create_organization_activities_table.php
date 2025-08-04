@@ -16,13 +16,14 @@ return new class extends Migration
             $table->unsignedBigInteger('organization_id');
             $table->unsignedBigInteger('activity_id');
             $table->timestamps();
-            
+
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
             $table->foreign('activity_id')->references('id')->on('activities')->onDelete('cascade');
-            
+
             $table->unique(['organization_id', 'activity_id']);
         });
     }
+
 
     /**
      * Reverse the migrations.

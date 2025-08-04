@@ -16,10 +16,11 @@ return new class extends Migration
             $table->string('phone_number');
             $table->unsignedBigInteger('organization_id');
             $table->timestamps();
-            
+
             $table->foreign('organization_id')->references('id')->on('organizations')->onDelete('cascade');
         });
     }
+
 
     /**
      * Reverse the migrations.

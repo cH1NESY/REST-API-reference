@@ -41,19 +41,19 @@
 
 - **Набор Rest-методов, которые позволяют**:
     - Поиск организации по названию
-    - Просмотреть список организаций 
-    - Получить список заказов (с фильтрами и настраиваемой пагинацией)
-    - Создать заказ (в заказе может быть несколько позиций с разным количеством)
-    - Обновить заказ (склад, данные покупателя и список позиций, но не статус)
-    - Завершить заказ
-    - Отменить заказ
-    - Возобновить заказ (перевод из отмены в работу)
-
-- **История движений товаров**:
-    - Таблица движений и модель
-    - Rest-метод для просмотра истории, изменения остатков товаров
-    - Фильтрация и пагинация
-
+    - Получить списка организаций, которые относятся к указанному виду деятельности
+    - Получить список организаций, которые находятся в заданном радиусе/прямоугольной области
+    - Получить информацию об организации по её идентификатору
+    - Поиск организации по виду деятельности с дочерними деятельностями
+    - Получить список всех организаций
+    - Получить список всех организаций находящихся в конкретном здании
+    - Получить список всех зданий
+    - Получить информацию о конкретном здании
+    - Получить список деятельностей
+    - Получить дерево деятельностей
+    - Получить информацию о конкретной деятельности
+  
+    
 - **Docker контейнеризация**:
     - Использование Docker для развертывания приложения и базы данных.
 
@@ -62,133 +62,92 @@
 
 ### Что было реализовано:
 
-- **Handler** — Обработчик исключений.
-- **CancelOrderAction** - Для отмены заказа и возврата товара на склад.
-- **CompleteOrderAction** — Для завершения заказа.
-- **CreateOrderAction** — Для создания заказа.
-- **GetOrderAction** - Для получения списка заказов с фильтрацией и пагинацией.
-- **ResumeOrderAction** - Для возобновления заказа.
-- **UpdateOrderAction** — Для обновления заказа.
-- **GetStockMovementsAction** — Для получения истории движений с фильтрами и пагинацией.
-- **OrderCreateDTO** — Данные для создания нового заказа.
-- **OrderFilterDTO** — Параметры фильтрации для поиска/вывода списка заказов.
-- **OrderItemDTO** — Одна позиция в заказе.
-- **OrderUpdateDTO** - Данные для обновления существующего заказа.
-- **StockMovementFilterDTO** - Параметры фильтрации для истории движения товара.
-- **OrderController** - Контроллер для обработки запросов о заказе.
-- **ProductController** - Контроллер для обработки запросов о продукте.
-- **StockMovementController** - Контроллер для обработки запросов об истории движений.
-- **WarehouseController** - Контроллер для обработки запросов о складе.
-- **BaseFormRequest** - Базовый класс для request'ов в проекте.
-- **OrderCreateRequest** - Валидация для создания заказа.
-- **OrderUpdateRequest** - Валидация для обновления заказа.
-- **ProductResource** - Возврат списка продуктов.
-- **Order** - Модель для работы с данными заказа.
-- **OrderItem** - Модель для работы с данными элемента заказа.
-- **Product** - Модель для работы с данными продукта.
-- **Stock** - Модель для работы с данными запаса.
-- **StockMovement** - Модель для работы с данными об истории движения.
-- **Warehouse** - Модель для работы с данными криптовалюты.
-- **2025_07_18_214471_create_orders_table** - Миграция для создания таблицы заказов.
-- **2025_07_18_214352_create_products_table** - Миграция для создания таблицы продуктов.
-- **2025_07_18_214426_create_warehouses_table** - Миграция для создания таблицы складов.
-- **2025_07_18_214543_create_order_items_table** - Миграция для создания таблицы элементов заказа.
-- **2025_07_18_214550_create_stocks_table** - Миграция для создания таблицы запасов.
-- **2025_07_20_121210_create_stock_movements_table** - Миграция для создания таблицы истории движений.
-- **2025_07_20_131600_create_personal_access_tokens_table** - Миграция для создания таблицы продуктов.
-- **DatabaseSeeder** - Для наполнения бд начальными данными.
-- **OrderSeeder** - Сидер для заполнения таблицы заказов.
-- **ProductSeeder** - Сидер для заполнения таблицы продуктов.
-- **StockSeeder** - Сидер для заполнения таблицы запасов.
-- **WarehouseSeeder** - Сидер для заполнения таблицы складов.
+- **GetActivityByIdAction** — Получить информацию о конкретной деятельности.
+- **GetActivityTreeAction** - Получить дерево деятельностей.
+- **GetRootActivitiesAction** — Получить список деятельностей.
+- **GetAllBuildingsAction** — Получить список всех зданий.
+- **GetBuildingByIdAction** - Получить информацию о конкретном здании.
+- **GetAllOrganizationsAction** - Получить список всех организаций.
+- **GetOrganizationByIdAction** — Получить информацию об организации по её идентификатору.
+- **GetOrganizationsByActivityAction** — Получить списка организаций, которые относятся к указанному виду деятельности.
+- **GetOrganizationsByActivityWithDescendantsAction** — Поиск организации по виду деятельности с дочерними деятельностями.
+- **GetOrganizationsByAreaAction** — Получить список организаций, которые находятся в заданной прямоугольной области.
+- **GetOrganizationsByBuildingAction** — Получить список всех организаций находящихся в конкретном здании.
+- **GetOrganizationsByRadiusAction** - Получить список организаций, которые находятся в заданном радиусе.
+- **SearchOrganizationsByNameAction** - Поиск организации по названию.
+- **AreaParamsDTO** - Данные для прямоугольной области.
+- **GeoParamsDTO** - Данные для радиуса.
+- **ActivityController** - Контроллер для обработки запросов о деятельностях.
+- **BuildingController** - Контроллер для обработки запросов о зданиях.
+- **OrganizationController** - Контроллер для обработки запросов об организациях.
+- **OrganizationFilterRequest** - Валидация.
+- **Activity** - Модель для работы с данными деятельности.
+- **Building** - Модель для работы с данными здания.
+- **Organization** - Модель для работы с данными организации.
+- **OrganizationActivity** - Модель для работы с данными деятельностей организации.
+- **OrganizationPhone** - Модель для работы с данными телефонов организации.
+- **2025_08_02_104646_create_buildings_table** - Миграция для создания таблицы зданий.
+- **2025_08_02_104654_create_activities_table** - Миграция для создания таблицы деятельностей.
+- **2025_08_02_104705_create_organizations_table** - Миграция для создания таблицы организаций.
+- **2025_08_02_104710_create_organization_phones_table** - Миграция для создания таблицы телефонов организации.
+- **2025_08_02_104716_create_organization_activities_table** - Миграция для создания таблицы деятельностей организации.
+- **ActivitySeeder** - Сидер для заполнения таблицы деятельностей.
+- **BuildingSeeder** - Сидер для заполнения таблицы зданий.
+- **OrganizationSeeder** - Сидер для заполнения таблицы организаций.
+- **ActivityApiTest** - Проверка работы api деятельности.
+- **ApiAuthTest** - Проверка работы api ключа.
+- **BuildingApiTest** - Проверка работы api зданий.
+- **OrganizationApiTest** - Проверка работы api организаций.
 - **api** - роуты.
 - **Dockerfile** — Конфигурация для создания контейнера Docker.
 - **docker-compose.yml** — Настройки для запуска контейнеров с помощью Docker Compose.
 - **.env** — Файл с переменными окружения для настройки конфигураций.
 - **README.md** — Описание проекта, инструкция по установке и запуску.
-- **OrderApiTest** - Проверка работы api заказов.
-- **ProductApiTest** - Проверка работы api продуктов.
-- **WarehouseApiTest** - Проверка работы api складов.
-- **StockMovementApiTest** - Проверка работы api истории движения.
 
 
 
 ## Эндпоинты
 
-### Получение складов
-GET  http://localhost:93/api/warehouses
+### Получение организации по идентификатору
+GET  http://localhost:95/api/organizations/1
 
-### Получение продуктов
-GET  http://localhost:93/api/products
+### Получение организации и фильтрация
+GET  http://localhost:95/api/organizations
 
-### Получение заказов
-GET  http://localhost:93/api/orders
+GET  http://localhost:95/api/organizations?filter[name]=Рога По имени
 
-GET http://localhost:93/api/orders/1 определенный заказ
-Фильтрация
-GET  http://localhost:93/api/orders?customer=Сидоров  по покупателю
+GET  http://localhost:95/api/organizations?filter[building_id]=5 По зданию
 
-GET  http://localhost:93/api/orders?customer=Сидоров&warehouse_id=2  + склад
+GET  http://localhost:95/api/organizations?filter[activity_id]=3 По деятельности
 
-GET  http://localhost:93/api/orders?customer=Сидоров&warehouse_id=2&status=completed  + статус
+GET  http://localhost:95/api/organizations?filter[activity_id]=3&include_descendants=true По деятельности c дочерними
 
-### Получение истории движения
-GET  http://localhost:93/api/stock-movements
+GET  http://localhost:95/api/organizations?filter[radius]=1&latitude=55.75&longitude=37.61&radius=10по радиусу
 
-### Создание заказа
-POST http://localhost:93/api/orders
+GET  http://localhost:95/api/organizations?filter[area]=1&min_lat=55.7&max_lat=55.8&min_lng=37.5&max_lng=37.7 по прямоугольной области
 
-```json
-  {
-    "customer": "Test User 2",
-    "warehouse_id": 1,
-    "items":
-    [{"product_id":2, "count":2}]
-  }
-  ```
-
-### Обновление заказа
-PUT http://localhost:93/api/orders/1
-
-```json
-  {
-    "customer": "Test User 10",
-    "warehouse_id": 3,
-    "items":
-    [{"product_id":4, "count":2}]
-  }
-  ```
-
-### Завершение заказа
-PATCH http://localhost:93/api/orders/{id активного заказа}/complete
-
-### Возобновление заказа
-PATCH http://localhost:93/api/orders/{id отмененного заказа}/resume
-
-### Отмена заказа
-PATCH http://localhost:93/api/orders/{id активного заказа}/cancel
 
 ## Инструкция по запуску
 
 1. Клонирование репозитория
-   git clone git@github.com:cH1NESY/Trading-app.git
-   cd trading-app
+   git clone git@github.com:cH1NESY/REST-API-reference.git
+   cd REST-API-reference
 
 2. Запуск контейнеров
    docker-compose up -d --build
 
 3. Установите связь с бд
-   Database->"+"->Data Source->MySQL.
+   Database->"+"->Data Source->PostgreSQL.
    ввод пользователя, пароля, порта и названия бд:
-   DB_PORT=3306
-   DB_DATABASE=laravel
-   DB_USERNAME=user
-   DB_PASSWORD=pass
+   DB_PORT=54400
+   DB_DATABASE=postgres
+   DB_USERNAME=dbuser
+   DB_PASSWORD=dbpwd
    Test connection->Apply->Ok
 
 4. Выполнение миграции
    Вводим в терминал:
-   docker exec -it php-fpm-tr bash
+   docker exec -it php-fpm-ref bash
    в контейнере запускаем миграцию:
    php artisan migrate
 

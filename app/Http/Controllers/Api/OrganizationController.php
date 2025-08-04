@@ -7,14 +7,16 @@ use App\DTO\AreaParamsDTO;
 use App\DTO\GeoParamsDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrganizationFilterRequest;
-use App\Actions\Organization\GetOrganizationByIdAction;
 use App\Actions\Organization\GetOrganizationsByBuildingAction;
 use App\Actions\Organization\GetOrganizationsByActivityAction;
 use App\Actions\Organization\GetOrganizationsByActivityWithDescendantsAction;
 use App\Actions\Organization\GetOrganizationsByRadiusAction;
 use App\Actions\Organization\GetOrganizationsByAreaAction;
 use App\Actions\Organization\SearchOrganizationsByNameAction;
+use App\Http\Resources\OrganizationResource;
 use App\Models\Activity;
+use App\Models\Organization;
+use App\Queries\OrganizationQuery;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -44,7 +46,7 @@ class OrganizationController extends Controller
     ) {}
     /**
      * @OA\Get(
-     *     path="/api/organizations/{id}",
+     *     path="/api/organizations/{organization}",
      *     summary="Получить информацию об организации",
      *     tags={"Organizations"},
      *     security={{"apiKey":{}}},
@@ -52,6 +54,7 @@ class OrganizationController extends Controller
      *         name="id",
      *         in="path",
      *         required=true,
+     *
      *         description="ID организации",
      *         @OA\Schema(type="integer")
      *     ),
@@ -73,17 +76,12 @@ class OrganizationController extends Controller
      *     )
      * )
      */
-    public function show(
-        string $id,
-        GetOrganizationByIdAction $getOrganizationByIdAction
-    ): JsonResponse {
-        $organization = $getOrganizationByIdAction->execute((int) $id);
 
-        if (!$organization) {
-            return response()->json(['error' => 'Organization not found'], 404);
-        }
-
-        return response()->json($organization);
+    public function show(Organization $organization): JsonResponse
+    {
+        return response()->json(
+            $organization->load(['building', 'phones', 'activities'])
+        );
     }
 
     /**
@@ -195,70 +193,10 @@ class OrganizationController extends Controller
      *     )
      * )
      */
-    public function index(OrganizationFilterRequest $request): JsonResponse
+    public function index(OrganizationQuery $query)
     {
-        // Поиск по названию
-        if ($request->has('name')) {
-            return response()->json(
-                $this->searchOrganizationsByNameAction->execute($request->name)
-            );
-        }
-
-        // Фильтр по зданию
-        if ($request->has('building_id')) {
-            return response()->json(
-                $this->getOrganizationsByBuildingAction->execute($request->building_id)
-            );
-        }
-
-        // Фильтр по виду деятельности
-        if ($request->has('activity_id')) {
-            $activity = Activity::find($request->activity_id);
-            if (!$activity) {
-                return response()->json(['error' => 'Activity not found'], 404);
-            }
-
-            if ($request->boolean('include_descendants', false)) {
-                return response()->json(
-                    $this->getOrganizationsByActivityWithDescendantsAction->execute($request->activity_id)
-                );
-            }
-
-            return response()->json(
-                $this->getOrganizationsByActivityAction->execute($request->activity_id)
-            );
-        }
-
-        // Поиск в радиусе
-        if ($request->has(['latitude', 'longitude', 'radius'])) {
-            $geoParams = new GeoParamsDTO(
-                $request->latitude,
-                $request->longitude,
-                $request->radius
-            );
-
-            return response()->json(
-                $this->getOrganizationsByRadiusAction->execute($geoParams)
-            );
-        }
-
-        // Поиск в прямоугольной области
-        if ($request->has(['min_lat', 'max_lat', 'min_lng', 'max_lng'])) {
-            $areaParams = new AreaParamsDTO(
-                $request->min_lat,
-                $request->max_lat,
-                $request->min_lng,
-                $request->max_lng
-            );
-
-            return response()->json(
-                $this->getOrganizationsByAreaAction->execute($areaParams)
-            );
-        }
-
-        // Если нет фильтров - возвращаем все организации
-        return response()->json(
-            $this->getAllOrganizationsAction->execute()
-        );
+        $organizations = $query->with(['building', 'phones', 'activities'])->paginate(15);
+        return OrganizationResource::collection($organizations);
     }
+
 }

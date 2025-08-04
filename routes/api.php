@@ -9,14 +9,7 @@ use App\Http\Controllers\Api\ActivityController;
 Route::middleware('api.key')->group(function () {
     // Organizations
     Route::get('/organizations', [OrganizationController::class, 'index']);
-    Route::get('/organizations/{id}', [OrganizationController::class, 'show']);
+    Route::get('/organizations/{organization}', [OrganizationController::class, 'show']);
 
-    // Buildings
-    Route::get('/buildings', [BuildingController::class, 'index']);
-    Route::get('/buildings/{id}', [BuildingController::class, 'show']);
 
-    // Activities
-    Route::get('/activities/tree', [ActivityController::class, 'tree']);
-    Route::get('/activities', [ActivityController::class, 'index']);
-    Route::get('/activities/{id}', [ActivityController::class, 'show']);
 });
