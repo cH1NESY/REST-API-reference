@@ -10,9 +10,7 @@ class PhoneResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'phone_number' => $this->phone_number,
-            'type' => $this->type,
-            // Добавляй другие поля, если нужно
+            'phone_number' => $this->phone_number
         ];
     }
 }

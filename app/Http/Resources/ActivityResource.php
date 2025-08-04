@@ -13,7 +13,7 @@ class ActivityResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'parent_id' => $this->parent_id,
-            // Можно добавить дочерние активности, если есть
+
         ];
     }
 }
