@@ -1,61 +1,205 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# REST-API-reference
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Описание
 
-## About Laravel
+Проект реализует rest api справочник организаций, зданий, деятельности.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Сущность "Деятельности" имеет следующие поля:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- id
+- Имя
+- id родителя
+- уровень
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Сущность "Здания" имеет следующие поля:
 
-## Learning Laravel
+- id
+- Адрес
+- Широта
+- Долгота
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Сущность "Организации" имеет следующие поля:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- id
+- Имя
+- id здания
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Сущность "Телефоны организации" имеет следующие поля:
 
-## Laravel Sponsors
+- id
+- Номер
+- id организации
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Сущность "Деятельности организации" имеет следующие поля:
 
-### Premium Partners
+- id 
+- id организации
+- id деятельности
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
 
-## Contributing
+## Что было реализовано:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+- **Набор Rest-методов, которые позволяют**:
+    - Поиск организации по названию
+    - Просмотреть список организаций 
+    - Получить список заказов (с фильтрами и настраиваемой пагинацией)
+    - Создать заказ (в заказе может быть несколько позиций с разным количеством)
+    - Обновить заказ (склад, данные покупателя и список позиций, но не статус)
+    - Завершить заказ
+    - Отменить заказ
+    - Возобновить заказ (перевод из отмены в работу)
 
-## Code of Conduct
+- **История движений товаров**:
+    - Таблица движений и модель
+    - Rest-метод для просмотра истории, изменения остатков товаров
+    - Фильтрация и пагинация
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+- **Docker контейнеризация**:
+    - Использование Docker для развертывания приложения и базы данных.
 
-## Security Vulnerabilities
+-**Seeder'ы для заполнения бд**
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-## License
+### Что было реализовано:
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+- **Handler** — Обработчик исключений.
+- **CancelOrderAction** - Для отмены заказа и возврата товара на склад.
+- **CompleteOrderAction** — Для завершения заказа.
+- **CreateOrderAction** — Для создания заказа.
+- **GetOrderAction** - Для получения списка заказов с фильтрацией и пагинацией.
+- **ResumeOrderAction** - Для возобновления заказа.
+- **UpdateOrderAction** — Для обновления заказа.
+- **GetStockMovementsAction** — Для получения истории движений с фильтрами и пагинацией.
+- **OrderCreateDTO** — Данные для создания нового заказа.
+- **OrderFilterDTO** — Параметры фильтрации для поиска/вывода списка заказов.
+- **OrderItemDTO** — Одна позиция в заказе.
+- **OrderUpdateDTO** - Данные для обновления существующего заказа.
+- **StockMovementFilterDTO** - Параметры фильтрации для истории движения товара.
+- **OrderController** - Контроллер для обработки запросов о заказе.
+- **ProductController** - Контроллер для обработки запросов о продукте.
+- **StockMovementController** - Контроллер для обработки запросов об истории движений.
+- **WarehouseController** - Контроллер для обработки запросов о складе.
+- **BaseFormRequest** - Базовый класс для request'ов в проекте.
+- **OrderCreateRequest** - Валидация для создания заказа.
+- **OrderUpdateRequest** - Валидация для обновления заказа.
+- **ProductResource** - Возврат списка продуктов.
+- **Order** - Модель для работы с данными заказа.
+- **OrderItem** - Модель для работы с данными элемента заказа.
+- **Product** - Модель для работы с данными продукта.
+- **Stock** - Модель для работы с данными запаса.
+- **StockMovement** - Модель для работы с данными об истории движения.
+- **Warehouse** - Модель для работы с данными криптовалюты.
+- **2025_07_18_214471_create_orders_table** - Миграция для создания таблицы заказов.
+- **2025_07_18_214352_create_products_table** - Миграция для создания таблицы продуктов.
+- **2025_07_18_214426_create_warehouses_table** - Миграция для создания таблицы складов.
+- **2025_07_18_214543_create_order_items_table** - Миграция для создания таблицы элементов заказа.
+- **2025_07_18_214550_create_stocks_table** - Миграция для создания таблицы запасов.
+- **2025_07_20_121210_create_stock_movements_table** - Миграция для создания таблицы истории движений.
+- **2025_07_20_131600_create_personal_access_tokens_table** - Миграция для создания таблицы продуктов.
+- **DatabaseSeeder** - Для наполнения бд начальными данными.
+- **OrderSeeder** - Сидер для заполнения таблицы заказов.
+- **ProductSeeder** - Сидер для заполнения таблицы продуктов.
+- **StockSeeder** - Сидер для заполнения таблицы запасов.
+- **WarehouseSeeder** - Сидер для заполнения таблицы складов.
+- **api** - роуты.
+- **Dockerfile** — Конфигурация для создания контейнера Docker.
+- **docker-compose.yml** — Настройки для запуска контейнеров с помощью Docker Compose.
+- **.env** — Файл с переменными окружения для настройки конфигураций.
+- **README.md** — Описание проекта, инструкция по установке и запуску.
+- **OrderApiTest** - Проверка работы api заказов.
+- **ProductApiTest** - Проверка работы api продуктов.
+- **WarehouseApiTest** - Проверка работы api складов.
+- **StockMovementApiTest** - Проверка работы api истории движения.
+
+
+
+## Эндпоинты
+
+### Получение складов
+GET  http://localhost:93/api/warehouses
+
+### Получение продуктов
+GET  http://localhost:93/api/products
+
+### Получение заказов
+GET  http://localhost:93/api/orders
+
+GET http://localhost:93/api/orders/1 определенный заказ
+Фильтрация
+GET  http://localhost:93/api/orders?customer=Сидоров  по покупателю
+
+GET  http://localhost:93/api/orders?customer=Сидоров&warehouse_id=2  + склад
+
+GET  http://localhost:93/api/orders?customer=Сидоров&warehouse_id=2&status=completed  + статус
+
+### Получение истории движения
+GET  http://localhost:93/api/stock-movements
+
+### Создание заказа
+POST http://localhost:93/api/orders
+
+```json
+  {
+    "customer": "Test User 2",
+    "warehouse_id": 1,
+    "items":
+    [{"product_id":2, "count":2}]
+  }
+  ```
+
+### Обновление заказа
+PUT http://localhost:93/api/orders/1
+
+```json
+  {
+    "customer": "Test User 10",
+    "warehouse_id": 3,
+    "items":
+    [{"product_id":4, "count":2}]
+  }
+  ```
+
+### Завершение заказа
+PATCH http://localhost:93/api/orders/{id активного заказа}/complete
+
+### Возобновление заказа
+PATCH http://localhost:93/api/orders/{id отмененного заказа}/resume
+
+### Отмена заказа
+PATCH http://localhost:93/api/orders/{id активного заказа}/cancel
+
+## Инструкция по запуску
+
+1. Клонирование репозитория
+   git clone git@github.com:cH1NESY/Trading-app.git
+   cd trading-app
+
+2. Запуск контейнеров
+   docker-compose up -d --build
+
+3. Установите связь с бд
+   Database->"+"->Data Source->MySQL.
+   ввод пользователя, пароля, порта и названия бд:
+   DB_PORT=3306
+   DB_DATABASE=laravel
+   DB_USERNAME=user
+   DB_PASSWORD=pass
+   Test connection->Apply->Ok
+
+4. Выполнение миграции
+   Вводим в терминал:
+   docker exec -it php-fpm-tr bash
+   в контейнере запускаем миграцию:
+   php artisan migrate
+
+5. Заполнение бд данными
+   Оставаясь в контейнере:
+   php artisan db:seed
+
+6. Запуск api тестов
+   Оставаясь в контейнере:
+   php artisan test
+
+
+
+# REST-API-reference
